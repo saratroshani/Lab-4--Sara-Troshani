@@ -1,14 +1,20 @@
 # Lab 4 - Mincer Wage Regression
 
-## Overview
+## About This Lab
 
-This lab uses Household Pulse data to look at the relationship between education and income.
+For this lab, I use the Household Pulse data to look at the relationship between education and income.
 
-I focus on people ages 25 to 55 with a non-missing work status.
+I focus on people between the ages of 25 and 55 who have information about their work status. I use this age group because these people are more likely to be part of the labor force.
 
-## Analysis
+The main question I am looking at is whether people with higher levels of education also have higher predicted income.
 
-The main regression uses:
+---
+
+## Main Regression
+
+My main regression uses income as the dependent variable.
+
+The variables I use to help explain income are:
 
 - Age
 - Gender
@@ -16,29 +22,139 @@ The main regression uses:
 - Race
 - Hispanic status
 
-I also include:
+The regression shows a strong relationship between education and income.
 
-- Predicted income values
-- A graph comparing advanced degree and high school education
-- Robust standard errors
-- A log income model
-- A female-only model
-- Joint F-tests
+For example, compared with the less-than-high-school group:
 
-## Main Result
+- College graduates are predicted to have about **$67,093 higher income**.
+- People with an advanced degree are predicted to have about **$88,508 higher income**.
 
-The results show a strong relationship between education and income.
+These results hold the other variables in the model constant.
 
-College graduates and people with advanced degrees have higher predicted income than the less-than-high-school group, holding the other variables constant.
+Age also has a positive relationship with income. One more year of age is associated with about **$1,239 more in predicted income**.
 
-The results are similar across the different models used in the lab.
+Most of the results are statistically significant. The "some high school" education group is the main exception.
+
+---
+
+## Predicted Income
+
+I also use the regression to predict income for two people with the same age, gender, race, and Hispanic status, but different education levels.
+
+I compare:
+
+- A Hispanic Black female with an advanced degree
+- A Hispanic Black female with a high school education
+
+At age 25:
+
+- Advanced degree predicted income: about **$81,549**
+- High school predicted income: about **$8,149**
+
+The model predicts higher income for the advanced degree group at every age.
+
+Predicted income also increases with age for both groups.
+
+---
+
+## Predicted Income Graph
+
+The graph below shows the predicted income for the two education groups from ages 25 to 55.
+
+![Predicted Income by Age and Education](predicted_income_graph.png)
+
+The two lines both go up as age increases.
+
+The advanced degree line stays much higher than the high school line. This shows the large difference in predicted income between the two education groups in this model.
+
+---
+
+## Robust Standard Errors
+
+I also use robust standard errors to see if the results change.
+
+The numbers change a little, but the main results stay the same.
+
+Most of the variables are still statistically significant, and education is still strongly related to income.
+
+The "some high school" group is still not statistically significant.
+
+---
+
+## Log Income Model
+
+I also run another regression using the **log of income** instead of income in dollars.
+
+This is another way to look at the relationship between the variables and income.
+
+The main results are similar, and education is still strongly related to income.
+
+The average predicted income from the regular model is about:
+
+**$112,008**
+
+The average predicted income after changing the log predictions back into dollars is about:
+
+**$95,028**
+
+The numbers are different because one model uses income in dollars and the other model uses the log of income.
+
+---
+
+## Female Only Model
+
+I also run the regression again using only females.
+
+Education still has a strong relationship with income.
+
+Compared with females in the less-than-high-school group:
+
+- Female college graduates are predicted to have about **$71,055 higher income**.
+- Females with an advanced degree are predicted to have about **$93,496 higher income**.
+
+This shows that the relationship between education and income is still strong when I only look at females.
+
+---
+
+## Joint F Tests
+
+I also use F-tests to check whether groups of variables are statistically significant together.
+
+In the main model:
+
+- Age is statistically significant
+- Gender is statistically significant
+- Education is statistically significant
+- Race is statistically significant
+- Hispanic status is statistically significant
+
+Education is also jointly significant in the female-only model.
+
+This tells me that education is an important variable in the model.
+
+---
+
+## Conclusion
+
+Overall, I find a strong relationship between education and income.
+
+People with higher levels of education generally have higher predicted income in these models.
+
+This relationship stays strong when I:
+
+- Use robust standard errors
+- Use the log of income
+- Look only at females
+
+However, these results only show a relationship between education and income. They do not prove that education directly causes someone to have a higher income.
+
+---
 
 ## Files
 
-- `Lab4(1).R` - R script with the analysis
-- `Lab 4 HW-ST(2).Rmd` - R Markdown file with code and explanations
-- `Lab-4-HW.html` - knitted HTML report
+This repository contains:
 
-## Note
-
-The results show relationships between the variables, but they do not prove that education directly causes differences in income.
+- `Lab4(1).R` - R code used for the analysis
+- `Lab 4 HW-ST(2).Rmd` - R Markdown file with the code and explanations
+- `Lab-4-HW.html` - Final knitted report
+- `predicted_income_graph.png` - Graph of predicted income by age and education
