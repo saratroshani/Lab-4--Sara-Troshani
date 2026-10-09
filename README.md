@@ -61,7 +61,8 @@ Predicted income also increases with age for both groups.
 
 The graph below shows the predicted income for the two education groups from ages 25 to 55.
 
-![Predicted Income by Age and Education](predicted_income_graph.png)
+<img width="1344" height="960" alt="image" src="https://github.com/user-attachments/assets/364d24b1-f9f7-48cf-8b52-ef4f8694aa0a" />
+
 
 The two lines both go up as age increases.
 
@@ -148,13 +149,4 @@ This relationship stays strong when I:
 
 However, these results only show a relationship between education and income. They do not prove that education directly causes someone to have a higher income.
 
----
 
-## Files
-
-This repository contains:
-
-- `Lab4(1).R` - R code used for the analysis
-- `Lab 4 HW-ST(2).Rmd` - R Markdown file with the code and explanations
-- `Lab-4-HW.html` - Final knitted report
-- `predicted_income_graph.png` - Graph of predicted income by age and education
