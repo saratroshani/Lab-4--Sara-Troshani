@@ -1,0 +1,212 @@
+---
+title: "Lab4 - HW"
+author: "Sara Troshani"
+date: "2026-10-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data and Sample
+
+The analysis uses the Household Pulse data. I focus on people ages 25 to 55 who have a non-missing work status.
+
+```{r}
+library(tidyverse)
+library(AER)
+
+load("~/Desktop/R Studio Data/Household Data/d_HHP2020_241.Rdata")
+
+prime_age_laborforce_data <- d_HHP2020_24 %>%
+  filter(
+    !is.na(work_kind),
+    Age >= 25,
+    Age <= 55
+  )
+
+summary(prime_age_laborforce_data)
+```
+
+This sample includes people ages 25 to 55 who have information about their work status. I use this group because they are more likely to be part of the labor force.
+
+## Main Regression
+
+The main regression looks at how income is related to age, gender, education, race, and Hispanic status.
+
+```{r}
+model_1 <- lm(
+  income_midpoint ~ Age + Gender + Education + Race + Hispanic,
+  data = prime_age_laborforce_data
+)
+
+summary(model_1)
+confint(model_1)
+```
+
+The results show a strong relationship between education and income.
+
+College graduates are predicted to have about $67,093 higher income than the less-than-high-school group, holding the other variables constant.
+
+People with an advanced degree are predicted to have about $88,508 higher income than the less-than-high-school group.
+
+Age also has a positive relationship with income. One more year of age is associated with about $1,239 more in predicted income.
+
+Most of the coefficients are statistically significant. The "some high school" group is not statistically significant.
+
+## Predicted Values
+
+I compare predicted income for a Hispanic Black female with an advanced degree and a Hispanic Black female with a high school education.
+
+```{r}
+to_be_predicted1 <- data.frame(
+  Age = 25:55,
+  Gender = "female",
+  Education = "adv degree",
+  Race = "Black",
+  Hispanic = "Hispanic"
+)
+
+to_be_predicted1$yhat <- predict(
+  model_1,
+  newdata = to_be_predicted1
+)
+
+head(to_be_predicted1)
+
+to_be_predicted2 <- data.frame(
+  Age = 25:55,
+  Gender = "female",
+  Education = "high school",
+  Race = "Black",
+  Hispanic = "Hispanic"
+)
+
+to_be_predicted2$yhat <- predict(
+  model_1,
+  newdata = to_be_predicted2
+)
+
+head(to_be_predicted2)
+```
+
+The predicted income is higher for the person with an advanced degree at every age.
+
+For example, at age 25, predicted income is about $81,549 for the advanced degree group and about $8,149 for the high school group.
+
+Predicted income also increases with age for both groups.
+
+## Predicted Income Graph
+
+```{r}
+comparison <- data.frame(
+  Age = 25:55,
+  Advanced_Degree = to_be_predicted1$yhat,
+  High_School = to_be_predicted2$yhat
+)
+
+head(comparison)
+
+ggplot(comparison, aes(x = Age)) +
+  geom_line(aes(y = Advanced_Degree, color = "Advanced Degree"), linewidth = 1) +
+  geom_line(aes(y = High_School, color = "High School"), linewidth = 1) +
+  labs(
+    title = "Predicted Income by Age and Education",
+    x = "Age",
+    y = "Predicted Income",
+    color = "Education"
+  )
+```
+
+The graph shows that predicted income goes up with age for both groups.
+
+The advanced degree group stays much higher than the high school group at every age.
+
+## Robust Standard Errors
+
+```{r}
+coeftest(model_1, vcovHC(model_1))
+```
+
+I also use robust standard errors to check the results.
+
+The standard errors change a little, but the main results stay the same.
+
+Most of the variables are still statistically significant, and the "some high school" group is still not statistically significant.
+
+## Log Income Model
+
+```{r}
+model_log <- lm(
+  log(income_midpoint) ~ Age + Gender + Education + Race + Hispanic,
+  data = prime_age_laborforce_data
+)
+
+summary(model_log)
+
+pred_level <- predict(model_1)
+pred_log <- exp(predict(model_log))
+
+mean(pred_level)
+mean(pred_log)
+```
+
+I also run a model using the log of income instead of income in dollars.
+
+The overall results are similar. Education is still strongly related to income.
+
+The average predicted income from the regular model is about $112,008.
+
+The average predicted income after changing the log predictions back into dollars is about $95,028.
+
+The two numbers are different because one model uses income in dollars and the other uses the log of income.
+
+## Female Only Model
+
+```{r}
+female_data <- prime_age_laborforce_data %>%
+  filter(Gender == "female")
+
+model_female <- lm(
+  income_midpoint ~ Age + Education + Race + Hispanic,
+  data = female_data
+)
+
+summary(model_female)
+```
+
+I also run the regression using only females.
+
+Education still has a strong relationship with income.
+
+For females, college graduates are predicted to have about $71,055 higher income than the less-than-high-school group.
+
+Females with an advanced degree are predicted to have about $93,496 higher income than the less-than-high-school group.
+
+This shows that the relationship between education and income is still strong when I only look at females.
+
+## Joint F Tests
+
+```{r}
+drop1(model_1, test = "F")
+drop1(model_female, test = "F")
+```
+
+The F-tests check whether groups of variables are statistically significant together.
+
+In the main model, age, gender, education, race, and Hispanic status are statistically significant.
+
+Education is also jointly significant in the female-only model.
+
+This means education is important in explaining differences in predicted income.
+
+## Conclusion
+
+Overall, the results show a strong relationship between education and income.
+
+People with higher levels of education tend to have higher predicted income, even after controlling for age, gender, race, and Hispanic status.
+
+The main results stay similar when I use robust standard errors, a log income model, and a female-only sample.
+
+These results show a relationship between education and income, but they do not prove that education directly causes the differences in income.
